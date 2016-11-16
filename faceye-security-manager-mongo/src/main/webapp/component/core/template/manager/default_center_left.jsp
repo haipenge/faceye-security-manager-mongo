@@ -24,10 +24,10 @@
 				</div>
 				 -->
 				<ul class="cl-vnavigation">
-
+					<!--@generate-entity-manager-list-group-item@-->
+					<!-- 
 					<li><a href="#"><i class="fa fa-file"></i><span>Pageds0a</span></a>
 						<ul class="sub-menu">
-							<!--@generate-entity-manager-list-group-item@-->
 						</ul></li>
 					<li><a href="#"><i class="fa fa-smile-o"></i><span>Serach</span></a>
 						<ul class="sub-menu">
@@ -35,9 +35,9 @@
 					<li><a href="#"><i class="fa fa-list-alt"></i><span>Stocks</span></a>
 						<ul class="sub-menu">
 						</ul></li>
-						<!-- Tset -->
+		 -->
 
-					<c:import url="/component/core/template/manager/security_default_center_left.jsp"/>
+					<c:import url="/component/core/template/manager/security_default_center_left.jsp" />
 					<!-- 
 					<li><a href="#"><i class="fa fa-table"></i><span>Tables</span></a>
 						<ul class="sub-menu">
