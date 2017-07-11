@@ -44,7 +44,7 @@ public class RoleServiceImpl extends BaseMongoServiceImpl<Role, Long, RoleReposi
 	}
 
 	@Override
-	public void remove(Long id) {
+	public void remove(Long id)  {
 		Role role = this.get(id);
 		this.remove(role);
 	}

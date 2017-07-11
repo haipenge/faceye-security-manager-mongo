@@ -19,7 +19,11 @@
 		<servlet-api.version>3.0-alpha-1</servlet-api.version>
 		<junit.version>4.12</junit.version>
 		<spring.version>4.3.9.RELEASE</spring.version>
+<<<<<<< HEAD
 		<spring-security.version>4.2.1.RELEASE</spring-security.version>
+=======
+		<spring-security.version>4.2.3.RELEASE</spring-security.version>
+>>>>>>> 34618a8e38ca08885f5076a1f9bdec537b070df1
 	</properties>
 	<dependencies>
 		<dependency>
