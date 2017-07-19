@@ -25,11 +25,20 @@ import com.faceye.feature.service.impl.BaseMongoServiceImpl;
 import com.faceye.feature.util.ServiceException;
 
 @Service("security-resourceService")
-public class ResourceServiceImpl extends BaseMongoServiceImpl<Resource, Long, ResourceRepository> implements ResourceService,
-		FilterInvocationSecurityMetadataSource {
+public class ResourceServiceImpl extends BaseMongoServiceImpl<Resource, Long, ResourceRepository>
+		implements ResourceService, FilterInvocationSecurityMetadataSource {
 	private PathMatcher pathMatcher = new AntPathMatcher();
 	@Autowired
 	private RoleService roleService = null;
+
+	// 权限判断URL集合
+	private List<Resource> resources = null;
+	// 上一次刷新resourcs集合的时间
+	private static Long LAST_REFRESH_RESOURCE_TIMESTAMP = 0L;
+	// 缓存有效时间,5分趾
+	private static Long CACHE_RESOURCE_EXPIRE_TIME_SECONDS = 5 * 60 * 1000L;
+
+	private List<String> ignoreUrls = null;
 
 	@Autowired
 	public ResourceServiceImpl(ResourceRepository dao) {
@@ -61,7 +70,7 @@ public class ResourceServiceImpl extends BaseMongoServiceImpl<Resource, Long, Re
 	}
 
 	@Override
-	public void remove(Resource entity)  {
+	public void remove(Resource entity) {
 		this.remove(entity.getId());
 		;
 	}
@@ -69,9 +78,16 @@ public class ResourceServiceImpl extends BaseMongoServiceImpl<Resource, Long, Re
 	@Override
 	public Collection<ConfigAttribute> getAttributes(Object object) throws IllegalArgumentException {
 		String url = ((FilterInvocation) object).getRequestUrl();
+		if(this.isUrlIgnore(url)){
+			return null;
+		}
 		logger.debug(">>FaceYe -->Security-->,filter url is:" + url);
-		List<Resource> resources = this.dao.findAll();
+		if (CollectionUtils.isEmpty(resources)
+				|| System.currentTimeMillis() - LAST_REFRESH_RESOURCE_TIMESTAMP > CACHE_RESOURCE_EXPIRE_TIME_SECONDS) {
+			resources = this.dao.findAll();
+		}
 		if (CollectionUtils.isNotEmpty(resources)) {
+			
 			for (Resource r : resources) {
 				String _url = r.getUrl();
 				if (StringUtils.isNotEmpty(_url) && !_url.endsWith("\\*")) {
@@ -88,12 +104,11 @@ public class ResourceServiceImpl extends BaseMongoServiceImpl<Resource, Long, Re
 
 	/**
 	 * 取得访问某一资源需要的角色
+	 * 
 	 * @todo
 	 * @param resource
 	 * @return
-	 * @author:@haipenge
-	 * haipenge@gmail.com
-	 * 2015年3月14日
+	 * @author:@haipenge haipenge@gmail.com 2015年3月14日
 	 */
 	private Collection<ConfigAttribute> getAttributes(Resource resource) {
 		Collection<ConfigAttribute> attributes = new HashSet<ConfigAttribute>();
@@ -146,6 +161,41 @@ public class ResourceServiceImpl extends BaseMongoServiceImpl<Resource, Long, Re
 	public Resource getResourceByMenuId(Long menuId) {
 		return this.dao.getResourceByMenuId(menuId);
 	}
+	
+	/**
+	 * 是否忽略的URL权限限制
+	 * 
+	 * @param url
+	 * @return
+	 */
+	private boolean isUrlIgnore(String url) {
+		boolean res = false;
+		List<String> ignoreUrls = this.ignoreUrls();
+		for (String regexp : ignoreUrls) {
+			res = pathMatcher.match(regexp, url);
+			if (res) {
+				break;
+			}
+		}
+		return res;
+	}
+
+	private List<String> ignoreUrls() {
+		if (CollectionUtils.isEmpty(ignoreUrls)) {
+			ignoreUrls.add("/static/**");
+			ignoreUrls.add("/public/**");
+			ignoreUrls.add("/images/**");
+			ignoreUrls.add("/js/**");
+			ignoreUrls.add("/css/**");
+			ignoreUrls.add("*.js");
+			ignoreUrls.add("*.css");
+			ignoreUrls.add("*.jpg");
+			ignoreUrls.add("*.png");
+			ignoreUrls.add("*.gif");
+			ignoreUrls.add("favor.ico");
+		}
+		return ignoreUrls;
+	}
 
 }
-/**@generate-service-source@**/
+/** @generate-service-source@ **/
