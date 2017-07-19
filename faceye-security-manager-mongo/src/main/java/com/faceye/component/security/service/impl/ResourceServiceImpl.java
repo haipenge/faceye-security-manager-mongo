@@ -192,6 +192,9 @@ public class ResourceServiceImpl extends BaseMongoServiceImpl<Resource, Long, Re
 			ignoreUrls.add("*.jpg");
 			ignoreUrls.add("*.png");
 			ignoreUrls.add("*.gif");
+			ignoreUrls.add("/login");
+			ignoreUrls.add("/j_spring_security_logout");
+			ignoreUrls.add("/j_spring_security_check");
 			ignoreUrls.add("favor.ico");
 		}
 		return ignoreUrls;
