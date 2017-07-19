@@ -1,11 +1,11 @@
 package com.faceye.component.security.service.impl;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
 
 import org.apache.commons.collections.CollectionUtils;
-import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.ConfigAttribute;
@@ -22,7 +22,6 @@ import com.faceye.component.security.repository.mongo.ResourceRepository;
 import com.faceye.component.security.service.ResourceService;
 import com.faceye.component.security.service.RoleService;
 import com.faceye.feature.service.impl.BaseMongoServiceImpl;
-import com.faceye.feature.util.ServiceException;
 
 @Service("security-resourceService")
 public class ResourceServiceImpl extends BaseMongoServiceImpl<Resource, Long, ResourceRepository>
@@ -182,6 +181,7 @@ public class ResourceServiceImpl extends BaseMongoServiceImpl<Resource, Long, Re
 
 	private List<String> ignoreUrls() {
 		if (CollectionUtils.isEmpty(ignoreUrls)) {
+			ignoreUrls=new ArrayList<String>(0);
 			ignoreUrls.add("/static/**");
 			ignoreUrls.add("/public/**");
 			ignoreUrls.add("/images/**");
