@@ -16,6 +16,8 @@
 			<security:filter-chain filters="none" pattern="/weixin/api/**" />
 			<security:filter-chain filters="none"
 				pattern="/security/user/isUserNameAndEmailExist**" />
+			<security:filter-chain filters="none" pattern="/register**"/>
+			<security:filter-chain filters="none" pattern="/login**"/>
 			<security:filter-chain pattern="/images/**"
 				filters="none" />
 			<security:filter-chain pattern="/**/*.css"
