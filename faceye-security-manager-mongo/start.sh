@@ -1,1 +1,2 @@
-mvn clean compile jetty:run -D maven.test.skip=true
+#!/bin/bash
+mvn clean  jetty:run -D maven.test.skip=true

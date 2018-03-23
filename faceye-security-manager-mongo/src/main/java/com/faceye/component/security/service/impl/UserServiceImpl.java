@@ -47,12 +47,12 @@ public class UserServiceImpl extends BaseMongoServiceImpl<User, Long, UserReposi
 
 	@Override
 	public void saveUserAuthRoles(Long userId, Long[] roleIds) {
-		User user = this.dao.findOne(userId);
+		User user = this.get(userId);
 		List<Role> roles = new ArrayList<Role>();
 		// user.getRoles().clear();
 		if (roleIds != null && roleIds.length > 0) {
 			for (Long roleId : roleIds) {
-				Role role = this.roleRepository.findOne(roleId);
+				Role role = this.roleRepository.findById(roleId).get();
 				roles.add(role);
 			}
 			user.setRoles(roles);

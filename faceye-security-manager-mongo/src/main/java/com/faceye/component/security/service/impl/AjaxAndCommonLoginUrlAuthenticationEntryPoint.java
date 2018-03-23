@@ -7,7 +7,6 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.InitializingBean;
@@ -22,21 +21,24 @@ import org.springframework.security.web.RedirectStrategy;
 import org.springframework.security.web.authentication.LoginUrlAuthenticationEntryPoint;
 import org.springframework.security.web.util.RedirectUrlBuilder;
 import org.springframework.security.web.util.UrlUtils;
-import org.springframework.util.Assert;
+import org.junit.Assert;
+import org.springframework.util.StringUtils;
 
 import com.faceye.component.security.util.AjaxSecurity;
+
 /**
  * 让Spring security 支持 ajax方式登陆
- * @author @haipenge 
- * haipenge@gmail.com
-*  Create Date:2014年6月28日
+ * 
+ * @author @haipenge haipenge@gmail.com Create Date:2014年6月28日
  */
 public class AjaxAndCommonLoginUrlAuthenticationEntryPoint implements AuthenticationEntryPoint, InitializingBean {
-	// ~ Static fields/initializers =====================================================================================
+	// ~ Static fields/initializers
+	// =====================================================================================
 
 	private static final Log logger = LogFactory.getLog(LoginUrlAuthenticationEntryPoint.class);
 
-	// ~ Instance fields ================================================================================================
+	// ~ Instance fields
+	// ================================================================================================
 
 	private PortMapper portMapper = new PortMapperImpl();
 
@@ -50,10 +52,11 @@ public class AjaxAndCommonLoginUrlAuthenticationEntryPoint implements Authentica
 
 	private final RedirectStrategy redirectStrategy = new DefaultRedirectStrategy();
 
-	// ~ Methods ========================================================================================================
+	// ~ Methods
+	// ========================================================================================================
 
 	public void afterPropertiesSet() throws Exception {
-		Assert.isTrue(StringUtils.isNotEmpty(loginFormUrl) && UrlUtils.isValidRedirectUrl(loginFormUrl),
+		Assert.assertTrue(StringUtils.hasText(loginFormUrl) && UrlUtils.isValidRedirectUrl(loginFormUrl),
 				"loginFormUrl must be specified and must be a valid redirect URL");
 		if (useForward && UrlUtils.isAbsoluteUrl(loginFormUrl)) {
 			throw new IllegalArgumentException("useForward must be false if using an absolute loginFormURL");
@@ -63,7 +66,8 @@ public class AjaxAndCommonLoginUrlAuthenticationEntryPoint implements Authentica
 	}
 
 	/**
-	 * Allows subclasses to modify the login form URL that should be applicable for a given request.
+	 * Allows subclasses to modify the login form URL that should be applicable
+	 * for a given request.
 	 * 
 	 * @param request
 	 *            the request
@@ -71,7 +75,8 @@ public class AjaxAndCommonLoginUrlAuthenticationEntryPoint implements Authentica
 	 *            the response
 	 * @param exception
 	 *            the exception
-	 * @return the URL (cannot be null or empty; defaults to {@link #getLoginFormUrl()})
+	 * @return the URL (cannot be null or empty; defaults to
+	 *         {@link #getLoginFormUrl()})
 	 */
 	protected String determineUrlToUseForThisRequest(HttpServletRequest request, HttpServletResponse response,
 			AuthenticationException exception) {
@@ -82,21 +87,22 @@ public class AjaxAndCommonLoginUrlAuthenticationEntryPoint implements Authentica
 	/**
 	 * Performs the redirect (or forward) to the login form URL.
 	 */
-	public void commence(HttpServletRequest request, HttpServletResponse response, AuthenticationException authException)
-			throws IOException, ServletException {
+	public void commence(HttpServletRequest request, HttpServletResponse response,
+			AuthenticationException authException) throws IOException, ServletException {
 
 		String redirectUrl = null;
 		boolean isAjaxRequest = AjaxSecurity.isAjaxRequest(request);
 		if (isAjaxRequest) {
-              AjaxSecurity.printAjaxLogin(response);
-              return;
+			AjaxSecurity.printAjaxLogin(response);
+			return;
 		}
 
 		if (useForward) {
 
 			if (forceHttps && "http".equals(request.getScheme())) {
 				// First redirect the current request to HTTPS.
-				// When that request is received, the forward to the login page will be used.
+				// When that request is received, the forward to the login page
+				// will be used.
 				redirectUrl = buildHttpsRedirectUrlForRequest(request);
 			}
 
@@ -159,7 +165,8 @@ public class AjaxAndCommonLoginUrlAuthenticationEntryPoint implements Authentica
 	}
 
 	/**
-	 * Builds a URL to redirect the supplied request to HTTPS. Used to redirect the current request to HTTPS, before doing a forward to the login page.
+	 * Builds a URL to redirect the supplied request to HTTPS. Used to redirect
+	 * the current request to HTTPS, before doing a forward to the login page.
 	 */
 	protected String buildHttpsRedirectUrlForRequest(HttpServletRequest request) throws IOException, ServletException {
 
@@ -186,9 +193,11 @@ public class AjaxAndCommonLoginUrlAuthenticationEntryPoint implements Authentica
 	}
 
 	/**
-	 * Set to true to force login form access to be via https. If this value is true (the default is false), and the incoming request for the protected resource
-	 * which triggered the interceptor was not already <code>https</code>, then the client will first be redirected to an https URL, even if
-	 * <tt>serverSideRedirect</tt> is set to <tt>true</tt>.
+	 * Set to true to force login form access to be via https. If this value is
+	 * true (the default is false), and the incoming request for the protected
+	 * resource which triggered the interceptor was not already
+	 * <code>https</code>, then the client will first be redirected to an https
+	 * URL, even if <tt>serverSideRedirect</tt> is set to <tt>true</tt>.
 	 */
 	public void setForceHttps(boolean forceHttps) {
 		this.forceHttps = forceHttps;
@@ -199,7 +208,8 @@ public class AjaxAndCommonLoginUrlAuthenticationEntryPoint implements Authentica
 	}
 
 	/**
-	 * The URL where the <code>UsernamePasswordAuthenticationFilter</code> login page can be found. Should either be relative to the web-app context path
+	 * The URL where the <code>UsernamePasswordAuthenticationFilter</code> login
+	 * page can be found. Should either be relative to the web-app context path
 	 * (include a leading {@code /}) or an absolute URL.
 	 */
 	public void setLoginFormUrl(String loginFormUrl) {
@@ -227,10 +237,13 @@ public class AjaxAndCommonLoginUrlAuthenticationEntryPoint implements Authentica
 	}
 
 	/**
-	 * Tells if we are to do a forward to the {@code loginFormUrl} using the {@code RequestDispatcher}, instead of a 302 redirect.
+	 * Tells if we are to do a forward to the {@code loginFormUrl} using the
+	 * {@code RequestDispatcher}, instead of a 302 redirect.
 	 * 
 	 * @param useForward
-	 *            true if a forward to the login page should be used. Must be false (the default) if {@code loginFormUrl} is set to an absolute value.
+	 *            true if a forward to the login page should be used. Must be
+	 *            false (the default) if {@code loginFormUrl} is set to an
+	 *            absolute value.
 	 */
 	public void setUseForward(boolean useForward) {
 		this.useForward = useForward;

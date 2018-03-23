@@ -19,7 +19,7 @@ import com.faceye.component.security.service.MenuService;
 import com.faceye.component.security.service.ResourceService;
 import com.faceye.component.security.service.RoleService;
 import com.faceye.feature.service.impl.BaseMongoServiceImpl;
-import com.faceye.feature.util.ServiceException;
+ 
 
 @Service("security-menuService")
 @Transactional
@@ -148,7 +148,7 @@ public class MenuServiceImpl extends BaseMongoServiceImpl<Menu, Long, MenuReposi
 		Menu menu = null;
 		Resource resource = null;
 		if (id != null) {
-			menu = this.dao.findOne(id);
+			menu = this.get(id);
 		} else {
 			menu = new Menu();
 		}
@@ -169,7 +169,7 @@ public class MenuServiceImpl extends BaseMongoServiceImpl<Menu, Long, MenuReposi
 //		menu.setResourceId(resource.getId());
 		menu.setResource(resource);
 		if (parentId != null) {
-			Menu parent = this.dao.findOne(parentId);
+			Menu parent = this.get(parentId);
 			if (parent != null) {
 				menu.setParentId(parent.getId());
 			}

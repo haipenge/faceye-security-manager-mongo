@@ -1,16 +1,13 @@
 package com.faceye.component.security.controller;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -29,7 +26,7 @@ import com.faceye.component.security.entity.User;
 import com.faceye.component.security.service.RoleService;
 import com.faceye.component.security.service.SecurityInitService;
 import com.faceye.component.security.service.UserService;
-import com.faceye.component.security.util.PasswordEncoder;
+import com.faceye.component.security.util.PasswordEncoderUtil;
 import com.faceye.feature.controller.BaseController;
 import com.faceye.feature.util.http.HttpUtil;
 
@@ -112,7 +109,7 @@ public class UserController extends BaseController<User, Long, UserService> {
 		String password = entity.getPassword();
 		entity.setUsername(entity.getUsername().toLowerCase());
 		entity.setEmail(entity.getEmail().toLowerCase());
-		String encodingPassword = PasswordEncoder.encoder(password,entity.getUsername());
+		String encodingPassword = PasswordEncoderUtil.encoder(password);
 		if (entity.getId() == null) {
 			entity.setPassword(encodingPassword);
 			Role role = this.roleService.get(Long.parseLong(registerRoleId));
@@ -140,7 +137,7 @@ public class UserController extends BaseController<User, Long, UserService> {
 		String password = entity.getPassword();
 		entity.setUsername(entity.getUsername().toLowerCase());
 		entity.setEmail(entity.getEmail().toLowerCase());
-		String encodingPassword = PasswordEncoder.encoder(password,entity.getUsername());
+		String encodingPassword = PasswordEncoderUtil.encoder(password);
 		if (entity.getId() == null) {
 			entity.setPassword(encodingPassword);
 			Role role = this.roleService.get(Long.parseLong(registerRoleId));

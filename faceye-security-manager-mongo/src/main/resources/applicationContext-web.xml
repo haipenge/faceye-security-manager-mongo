@@ -156,8 +156,7 @@
 				<!-- </bean> -->
 				<bean
 					class="org.springframework.http.converter.xml.Jaxb2RootElementHttpMessageConverter" />
-				<bean
-					class="org.springframework.http.converter.xml.XmlAwareFormHttpMessageConverter" />
+			
 				<bean
 					class="org.springframework.http.converter.BufferedImageHttpMessageConverter" />
 				<ref bean="formHttpMessageConverter" />

@@ -21,7 +21,7 @@ import com.faceye.component.security.repository.mongo.RoleRepository;
 import com.faceye.component.security.repository.mongo.UserRepository;
 import com.faceye.component.security.service.RoleService;
 import com.faceye.feature.service.impl.BaseMongoServiceImpl;
-import com.faceye.feature.util.ServiceException;
+ 
 
 /**
  * 角色服务类
@@ -83,11 +83,11 @@ public class RoleServiceImpl extends BaseMongoServiceImpl<Role, Long, RoleReposi
 
 	@Override
 	public void saveRoleAuthResources(Long roleId, Long[] resourceIds) {
-		Role role = this.dao.findOne(roleId);
+		Role role = this.get(roleId);
 		List<Resource> resources=new ArrayList<Resource>(0);
 		if (resourceIds != null && resourceIds.length > 0) {
 			for (Long resourceId : resourceIds) {
-				Resource resource = this.resourceRepository.findOne(resourceId);
+				Resource resource = this.resourceRepository.findById(resourceId).get();
 				resources.add(resource);
 			}
 		}
