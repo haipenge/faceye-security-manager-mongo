@@ -1,13 +1,12 @@
 package com.faceye.test.component.security.service;
 
-import org.eclipse.core.runtime.Assert;
 import org.junit.After;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.faceye.component.security.service.SecurityInitService;
-import com.faceye.feature.doc.Sequence;
 import com.faceye.test.feature.service.BaseServiceTestCase;
 
 public class SecurityInitServiceTestCase extends BaseServiceTestCase {
